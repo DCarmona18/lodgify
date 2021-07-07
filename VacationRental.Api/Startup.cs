@@ -1,11 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
-using VacationRental.Api.Models;
+using VacationRental.Domain.Models;
+using VacationRental.Domain.Services.Classes;
+using VacationRental.Domain.Services.Interfaces;
+using VacationRental.Infrastructure.Entities;
+using VacationRental.Infrastructure.Repositories.Classes;
+using VacationRental.Infrastructure.Repositories.Interfaces;
 
 namespace VacationRental.Api
 {
@@ -25,8 +32,23 @@ namespace VacationRental.Api
 
             services.AddSwaggerGen(opts => opts.SwaggerDoc("v1", new Info { Title = "Vacation rental information", Version = "v1" }));
 
-            services.AddSingleton<IDictionary<int, RentalViewModel>>(new Dictionary<int, RentalViewModel>());
-            services.AddSingleton<IDictionary<int, BookingViewModel>>(new Dictionary<int, BookingViewModel>());
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddApiVersioning();
+
+            services.AddSingleton<IDictionary<int, RentalsEntity>>(new Dictionary<int, RentalsEntity>());
+            services.AddSingleton<IDictionary<int, BookingEntity>>(new Dictionary<int, BookingEntity>());
+
+            #region DI
+            services.AddTransient<IBookingService, BookingService>();
+            services.AddTransient<ICalendarService, CalendarService>();
+            services.AddTransient<IRentalsService, RentalsService>();
+
+            //services.AddTransient<IVacationsRentalService, VacationsRentalService>();
+            services.AddTransient<IVacationsRentalCalendarService, VacationsRentalCalendarService>();
+
+            services.AddTransient<IRentalsRepository, RentalsRepository>();
+            services.AddTransient<IBookingRepository, BookingRepository>();
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
