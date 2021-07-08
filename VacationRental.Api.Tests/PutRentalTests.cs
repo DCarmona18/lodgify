@@ -22,7 +22,7 @@ namespace VacationRental.Api.Tests
         [Fact]
         public async Task GivenCompleteRequest_WhenPutRentalAndNoBooking_ThenAGetReturnsTheUpdatedRental()
         {
-            var request = new RentalBindingModelV2
+            var request = new RentalBindingModel
             {
                 Units = 25,
                 PreparationTimeInDays = 2
@@ -35,7 +35,7 @@ namespace VacationRental.Api.Tests
                 postResult = await postResponse.Content.ReadAsAsync<ResourceIdViewModel>();
             }
 
-            var request2 = new RentalBindingModelV2
+            var request2 = new RentalBindingModel
             {
                 Units = 20,
                 PreparationTimeInDays = 3
@@ -46,11 +46,11 @@ namespace VacationRental.Api.Tests
                 Assert.True(putResponse.IsSuccessStatusCode);
             }
 
-            using (var getResponse = await _client.GetAsync($"/api/v1/vacationrental/rentals/{postResult.Id}"))
+            using (var getResponse = await _client.GetAsync($"/api/v1/rentals/{postResult.Id}"))
             {
                 Assert.True(getResponse.IsSuccessStatusCode);
 
-                var getResult = await getResponse.Content.ReadAsAsync<RentalViewModelV2>();
+                var getResult = await getResponse.Content.ReadAsAsync<RentalViewModel>();
                 Assert.Equal(request2.Units, getResult.Units);
                 Assert.Equal(request2.PreparationTimeInDays, getResult.PreparationTimeInDays);
             }
@@ -59,7 +59,7 @@ namespace VacationRental.Api.Tests
         [Fact]
         public async Task GivenCompleteRequest_WhenPutRentalAndBookingCheckDays_ThenAGetReturnsTheUpdatedRental()
         {
-            var request = new RentalBindingModelV2
+            var request = new RentalBindingModel
             {
                 Units = 1,
                 PreparationTimeInDays = 2
@@ -98,7 +98,7 @@ namespace VacationRental.Api.Tests
             }
 
 
-            var request2 = new RentalBindingModelV2
+            var request2 = new RentalBindingModel
             {
                 Units = 1,
                 PreparationTimeInDays = 3
@@ -109,11 +109,11 @@ namespace VacationRental.Api.Tests
                 Assert.True(putResponse.IsSuccessStatusCode);
             }
 
-            using (var getResponse = await _client.GetAsync($"/api/v1/vacationrental/rentals/{postResult.Id}"))
+            using (var getResponse = await _client.GetAsync($"/api/v1/rentals/{postResult.Id}"))
             {
                 Assert.True(getResponse.IsSuccessStatusCode);
 
-                var getResult = await getResponse.Content.ReadAsAsync<RentalViewModelV2>();
+                var getResult = await getResponse.Content.ReadAsAsync<RentalViewModel>();
                 Assert.Equal(request2.Units, getResult.Units);
                 Assert.Equal(request2.PreparationTimeInDays, getResult.PreparationTimeInDays);
             }
@@ -122,7 +122,7 @@ namespace VacationRental.Api.Tests
         [Fact]
         public async Task GivenCompleteRequest_WhenPutRentalAndBookingCheckUnit_ThenAPutReturnsErrorWhenThereIsOverlapping()
         {
-            var request = new RentalBindingModelV2
+            var request = new RentalBindingModel
             {
                 Units = 2,
                 PreparationTimeInDays = 2
@@ -160,7 +160,7 @@ namespace VacationRental.Api.Tests
                 Assert.True(postBooking2Response.IsSuccessStatusCode);
             }
 
-            var request2 = new RentalBindingModelV2
+            var request2 = new RentalBindingModel
             {
                 Units = 1,
                 PreparationTimeInDays = 3

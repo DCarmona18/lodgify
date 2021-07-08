@@ -33,6 +33,6 @@ namespace VacationRental.Domain.Services.Interfaces
         /// <param name="model"></param>
         /// <param name="rental"></param>
         /// <returns></returns>
-        Task<bool> ValidateOverLapping(BookingViewModel model, RentalBindingModelV2 rental, List<BookingViewModel> bookings);
+        Task<bool> ValidateOverLapping(BookingViewModel model, RentalBindingModel rental, List<BookingViewModel> bookings);
     }
 }

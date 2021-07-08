@@ -31,16 +31,16 @@ namespace VacationRental.Domain.Services.Classes
 
         #region Public Methods
         ///<inheritdoc/>
-        public async Task<T> GetByIdAsync<T>(int rentalId)
+        public async Task<RentalViewModel> GetByIdAsync(int rentalId)
         {
             var rental = await _rentalsRepository.GetById(rentalId);
             if (rental.Count == 0)
                 throw new ApplicationException("Rental not found");
 
-            return _mapper.Map<T>(rental.First().Value);
+            return _mapper.Map<RentalViewModel>(rental.First().Value);
         }
         ///<inheritdoc/>
-        public async Task<ResourceIdViewModel> CreateAsync(IRentalBinding model)
+        public async Task<ResourceIdViewModel> CreateAsync(RentalBindingModel model)
         {
             var rentalsEntity = _mapper.Map<RentalsEntity>(model);
             var data = await _rentalsRepository.CreateUpdate(rentalsEntity)
@@ -50,7 +50,7 @@ namespace VacationRental.Domain.Services.Classes
         }
 
         ///<inheritdoc/>
-        public async Task<ResourceIdViewModel> UpdateAsync(int rentalId, RentalBindingModelV2 model)
+        public async Task<ResourceIdViewModel> UpdateAsync(int rentalId, RentalBindingModel model)
         {
             var rental = await _rentalsRepository.GetById(rentalId);
             if (rental.Count == 0)
@@ -59,8 +59,9 @@ namespace VacationRental.Domain.Services.Classes
             if (model.PreparationTimeInDays > rental.First().Value.PreparationTimeInDays
                 || model.Units < rental.First().Value.Units)
             {
-                // Validate conflict
                 var bookings = await _bookingService.GetBookingsByRentalId(rentalId);
+
+                // Validates each booking against the others to check whether or not it overlaps
                 foreach (var booking in bookings)
                 {
                     if (await _bookingService.ValidateOverLapping(booking, model, bookings))

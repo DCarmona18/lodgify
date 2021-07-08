@@ -22,7 +22,7 @@ namespace VacationRental.Api.Tests
         [Fact]
         public async Task GivenCompleteRequest_WhenPostVacationsRental_ThenAGetReturnsTheCreatedRental()
         {
-            var request = new RentalBindingModelV2
+            var request = new RentalBindingModel
             {
                 Units = 25,
                 PreparationTimeInDays = 5
@@ -35,11 +35,11 @@ namespace VacationRental.Api.Tests
                 postResult = await postResponse.Content.ReadAsAsync<ResourceIdViewModel>();
             }
 
-            using (var getResponse = await _client.GetAsync($"/api/v1/vacationrental/rentals/{postResult.Id}"))
+            using (var getResponse = await _client.GetAsync($"/api/v1/rentals/{postResult.Id}"))
             {
                 Assert.True(getResponse.IsSuccessStatusCode);
 
-                var getResult = await getResponse.Content.ReadAsAsync<RentalViewModelV2>();
+                var getResult = await getResponse.Content.ReadAsAsync<RentalViewModel>();
                 Assert.Equal(request.Units, getResult.Units);
                 Assert.Equal(request.PreparationTimeInDays, getResult.PreparationTimeInDays);
             }

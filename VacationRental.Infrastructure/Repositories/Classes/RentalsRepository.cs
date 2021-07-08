@@ -40,9 +40,7 @@ namespace VacationRental.Infrastructure.Repositories.Classes
                 // Update
                 var rental = await GetById(rentalsEntity.Id);
                 if (rental != null)
-                {
                     result = _rentals[rentalsEntity.Id] = rentalsEntity;
-                }
             }
             else 
             {

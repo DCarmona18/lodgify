@@ -54,7 +54,7 @@ namespace VacationRental.Domain.Services.Classes
                 throw new ApplicationException("Rental not found");
 
             /**/
-            var rental = _mapper.Map<RentalBindingModelV2>(rentalEntity.First().Value);
+            var rental = _mapper.Map<RentalBindingModel>(rentalEntity.First().Value);
             var bookingViewModel = _mapper.Map<BookingViewModel>(model);
             var bookings = await GetBookingsByRentalId(model.RentalId);
             if (await ValidateOverLapping(bookingViewModel, rental, bookings))
@@ -72,7 +72,7 @@ namespace VacationRental.Domain.Services.Classes
         }
 
         ///<inheritdoc/>
-        public async Task<bool> ValidateOverLapping(BookingViewModel bookingModel, RentalBindingModelV2 rental, List<BookingViewModel> bookings) 
+        public async Task<bool> ValidateOverLapping(BookingViewModel bookingModel, RentalBindingModel rental, List<BookingViewModel> bookings) 
         {
             var response = false;
             int preparationDays = rental.PreparationTimeInDays;

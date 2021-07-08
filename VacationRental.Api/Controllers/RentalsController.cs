@@ -10,7 +10,6 @@ namespace VacationRental.Api.Controllers
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
-    [Obsolete]
     public class RentalsController : ControllerBase
     {
         #region Properties
@@ -28,7 +27,7 @@ namespace VacationRental.Api.Controllers
         [HttpGet]
         [Route("{rentalId:int}")]
         public async Task<RentalViewModel> GetAsync(int rentalId) => 
-            await _rentalsService.GetByIdAsync<RentalViewModel>(rentalId);
+            await _rentalsService.GetByIdAsync(rentalId);
 
         [HttpPost]
         public async Task<ResourceIdViewModel> PostAsync(RentalBindingModel model) =>

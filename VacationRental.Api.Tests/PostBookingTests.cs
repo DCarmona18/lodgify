@@ -102,7 +102,7 @@ namespace VacationRental.Api.Tests
         [Fact]
         public async Task GivenCompleteRequest_WhenPostBookingWithPreparationTimeInDays_ThenAGetReturnsTheCreatedBooking()
         {
-            var postRentalRequest = new RentalBindingModelV2
+            var postRentalRequest = new RentalBindingModel
             {
                 Units = 1,
                 PreparationTimeInDays = 2
@@ -148,7 +148,7 @@ namespace VacationRental.Api.Tests
             DateTime initialDate1, DateTime initialDate2, int nights
             )
         {
-            var postRentalRequest = new RentalBindingModelV2
+            var postRentalRequest = new RentalBindingModel
             {
                 Units = 1,
                 PreparationTimeInDays = 3

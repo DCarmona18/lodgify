@@ -14,19 +14,19 @@ namespace VacationRental.Domain.Services.Interfaces
         /// </summary>
         /// <param name="rentalId"></param>
         /// <returns></returns>
-        Task<T> GetByIdAsync<T>(int rentalId);
+        Task<RentalViewModel> GetByIdAsync(int rentalId);
         /// <summary>
         /// Creates a Rental
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        Task<ResourceIdViewModel> CreateAsync(IRentalBinding model);
+        Task<ResourceIdViewModel> CreateAsync(RentalBindingModel model);
         /// <summary>
         /// Updates Rental information
         /// </summary>
         /// <param name="rentalId"></param>
         /// <param name="model"></param>
         /// <returns></returns>
-        Task<ResourceIdViewModel> UpdateAsync(int rentalId, RentalBindingModelV2 model);
+        Task<ResourceIdViewModel> UpdateAsync(int rentalId, RentalBindingModel model);
     }
 }

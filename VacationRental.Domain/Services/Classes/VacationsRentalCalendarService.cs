@@ -36,7 +36,7 @@ namespace VacationRental.Domain.Services.Classes
             if (nights < 0)
                 throw new ApplicationException("Nights must be positive");
 
-            var rentals = _mapper.Map<IDictionary<int, RentalViewModelV2>>(await _rentalsRepository.GetById(rentalId));
+            var rentals = _mapper.Map<IDictionary<int, RentalViewModel>>(await _rentalsRepository.GetById(rentalId));
             if (rentals.Count == 0)
                 throw new ApplicationException("Rental not found");
 

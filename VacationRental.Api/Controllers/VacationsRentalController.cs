@@ -23,17 +23,12 @@ namespace VacationRental.Api.Controllers
 
         #region Public Methods
 
-        [HttpGet]
-        [Route("{rentalId:int}")]
-        public async Task<RentalViewModelV2> GetAsync(int rentalId) =>
-            await _rentalsService.GetByIdAsync<RentalViewModelV2>(rentalId);
-
         [HttpPost]
-        public async Task<ResourceIdViewModel> PostAsync(RentalBindingModelV2 model) =>
+        public async Task<ResourceIdViewModel> PostAsync(RentalBindingModel model) =>
             await _rentalsService.CreateAsync(model);
 
         [HttpPut("{rentalId:int}")]
-        public async Task<ResourceIdViewModel> PutAsync(int rentalId, RentalBindingModelV2 model) =>
+        public async Task<ResourceIdViewModel> PutAsync(int rentalId, RentalBindingModel model) =>
             await _rentalsService.UpdateAsync(rentalId, model);
         #endregion
     }

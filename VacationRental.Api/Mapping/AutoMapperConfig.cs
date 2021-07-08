@@ -19,10 +19,8 @@ namespace VacationRental.Api.Mapping
 
             CreateMap<RentalsEntity, RentalViewModel>().ReverseMap();
             CreateMap<RentalViewModel, RentalsEntity>().ReverseMap();
-            CreateMap<RentalViewModelV2, RentalsEntity>().ReverseMap();
             
             CreateMap<RentalBindingModel, RentalsEntity>().ReverseMap();
-            CreateMap<RentalBindingModelV2, RentalsEntity>().ReverseMap();
 
             CreateMap<BookingBindingModel, BookingViewModel>().ReverseMap();
         }
