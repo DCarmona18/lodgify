@@ -1,43 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using VacationRental.Api.Models;
+using VacationRental.Domain.Models;
+using VacationRental.Domain.Services.Interfaces;
 
 namespace VacationRental.Api.Controllers
 {
-    [Route("api/v1/rentals")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     public class RentalsController : ControllerBase
     {
-        private readonly IDictionary<int, RentalViewModel> _rentals;
+        #region Properties
+        private readonly IRentalsService _rentalsService;
+        #endregion
 
-        public RentalsController(IDictionary<int, RentalViewModel> rentals)
+        #region Constructor
+        public RentalsController(IRentalsService rentalsService)
         {
-            _rentals = rentals;
+            _rentalsService = rentalsService;
         }
+        #endregion
 
+        #region Public Methods
         [HttpGet]
         [Route("{rentalId:int}")]
-        public RentalViewModel Get(int rentalId)
-        {
-            if (!_rentals.ContainsKey(rentalId))
-                throw new ApplicationException("Rental not found");
-
-            return _rentals[rentalId];
-        }
+        public async Task<RentalViewModel> GetAsync(int rentalId) => 
+            await _rentalsService.GetByIdAsync(rentalId);
 
         [HttpPost]
-        public ResourceIdViewModel Post(RentalBindingModel model)
-        {
-            var key = new ResourceIdViewModel { Id = _rentals.Keys.Count + 1 };
+        public async Task<ResourceIdViewModel> PostAsync(RentalBindingModel model) =>
+            await _rentalsService.CreateAsync(model);
 
-            _rentals.Add(key.Id, new RentalViewModel
-            {
-                Id = key.Id,
-                Units = model.Units
-            });
-
-            return key;
-        }
+        [HttpPut("{rentalId:int}")]
+        public async Task<ResourceIdViewModel> PutAsync(int rentalId, RentalBindingModel model) =>
+            await _rentalsService.UpdateAsync(rentalId, model);
+        #endregion
     }
 }
