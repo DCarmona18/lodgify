@@ -15,12 +15,12 @@ namespace VacationRental.Api.Controllers
     public class VacationsCalendarController : ControllerBase
     {
         #region Properties
-        private readonly ICalendarService _calendarService;
+        private readonly IVacationsRentalCalendarService _calendarService;
         #endregion
 
         #region Constructor
         public VacationsCalendarController(
-            ICalendarService calendarService)
+            IVacationsRentalCalendarService calendarService)
         {
             _calendarService = calendarService;
         }
@@ -28,7 +28,7 @@ namespace VacationRental.Api.Controllers
 
         #region Public Methods
         [HttpGet]
-        public async Task<CalendarViewModel> GetAsync(int rentalId, DateTime start, int nights) =>
+        public async Task<VacationsRentalCalendarViewModel> GetAsync(int rentalId, DateTime start, int nights) =>
             await _calendarService.GetAvailabilityAsync(rentalId, start, nights);
         #endregion
     }

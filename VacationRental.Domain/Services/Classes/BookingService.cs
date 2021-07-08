@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VacationRental.Domain.Helpers;
 using VacationRental.Domain.Models;
 using VacationRental.Domain.Services.Interfaces;
 using VacationRental.Infrastructure.Entities;
@@ -52,20 +53,11 @@ namespace VacationRental.Domain.Services.Classes
             if (rentalEntity.Count == 0)
                 throw new ApplicationException("Rental not found");
 
-            int preparationDays = rentalEntity.First().Value.PreparationTimeInDays;
-            var bookings = _mapper.Map<IDictionary<int, BookingViewModel>>(await _bookingsRepository.GetAll());
-            
-            var count = 0;
-            foreach (var booking in bookings.Values)
-            {
-                var modelEndDate = model.Start.AddDays(model.Nights + preparationDays);
-                var bookingEndDate = booking.Start.AddDays(booking.Nights + preparationDays);
-
-                if (booking.RentalId == model.RentalId && TimeOverlaps(booking.Start, bookingEndDate, model.Start, modelEndDate))
-                    count++;
-            }
-
-            if (count >= rentalEntity.First().Value.Units)
+            /**/
+            var rental = _mapper.Map<RentalBindingModelV2>(rentalEntity.First().Value);
+            var bookingViewModel = _mapper.Map<BookingViewModel>(model);
+            var bookings = await GetBookingsByRentalId(model.RentalId);
+            if (await ValidateOverLapping(bookingViewModel, rental, bookings))
                 throw new ApplicationException("Not available");
 
             var bookingEntity = new BookingEntity
@@ -78,23 +70,46 @@ namespace VacationRental.Domain.Services.Classes
 
             return new ResourceIdViewModel { Id = result.Id };
         }
+
+        ///<inheritdoc/>
+        public async Task<bool> ValidateOverLapping(BookingViewModel bookingModel, RentalBindingModelV2 rental, List<BookingViewModel> bookings) 
+        {
+            var response = false;
+            int preparationDays = rental.PreparationTimeInDays;
+
+            var count = 0;
+            foreach (var booking in bookings)
+            {
+                var modelEndDate = bookingModel.Start.AddDays(bookingModel.Nights + preparationDays);
+                var bookingEndDate = booking.Start.AddDays(booking.Nights + preparationDays);
+
+                if (booking.Id != bookingModel.Id &&
+                    DatesHelper.TimesOverlap(booking.Start, bookingEndDate, bookingModel.Start, modelEndDate))
+                    count++;
+            }
+
+            if (count >= rental.Units)
+                response = true;
+
+            return response;
+        }
+
+        ///<inheritdoc/>
+        public async Task<List<BookingViewModel>> GetBookingsByRentalId(int rentalId)
+        {
+            var result = new List<BookingViewModel>();
+            var bookings = _mapper.Map<IDictionary<int, BookingViewModel>>(await _bookingsRepository.GetAll());
+            foreach (var booking in bookings.Values)
+            {
+                if (booking.RentalId == rentalId)
+                    result.Add(booking);
+            }
+
+            return result;
+        }
         #endregion
 
         #region Private Methods
-        /// <summary>
-        /// Validates if 2 Dates overlap each other
-        /// </summary>
-        /// <param name="startX">Date 1: Start Date</param>
-        /// <param name="endX">Date 1: End Date</param>
-        /// <param name="startY">Date 2: Start Date</param>
-        /// <param name="endY">Date 2: End Date</param>
-        /// <returns></returns>
-        private bool TimeOverlaps(DateTime startX, DateTime endX, DateTime startY, DateTime endY) 
-        {
-            return ((startX <= startY.Date && endX > startY.Date)
-                    || (startX < endY && endX >= endY)
-                    || (startX > startY && endX < endY));
-        }
         #endregion
     }
 }

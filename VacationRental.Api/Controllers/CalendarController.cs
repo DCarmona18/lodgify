@@ -9,6 +9,7 @@ namespace VacationRental.Api.Controllers
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
+    [Obsolete]
     public class CalendarController : ControllerBase
     {
         #region Properties
@@ -23,8 +24,10 @@ namespace VacationRental.Api.Controllers
         }
         #endregion
 
+        #region Public Methods
         [HttpGet]
-        public async Task<CalendarViewModel> GetAsync(int rentalId, DateTime start, int nights) => 
+        public async Task<CalendarViewModel> GetAsync(int rentalId, DateTime start, int nights) =>
             await _calendarService.GetAvailabilityAsync(rentalId, start, nights);
+        #endregion
     }
 }

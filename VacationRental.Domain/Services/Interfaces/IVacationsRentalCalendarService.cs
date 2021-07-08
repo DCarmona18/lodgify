@@ -15,6 +15,6 @@ namespace VacationRental.Domain.Services.Interfaces
         /// <param name="start"></param>
         /// <param name="nights"></param>
         /// <returns></returns>
-        Task<CalendarViewModel> GetAvailabilityAsync(int rentalId, DateTime start, int nights);
+        Task<VacationsRentalCalendarViewModel> GetAvailabilityAsync(int rentalId, DateTime start, int nights);
     }
 }

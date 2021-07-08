@@ -49,7 +49,6 @@ namespace VacationRental.Domain.Services.Classes
             };
 
             var bookings = await _bookingsRepository.GetAll();
-            //int preparationDays = rentals.First().Value.PreparationTimeInDays;
             for (var i = 0; i < nights; i++)
             {
                 var date = new CalendarDateViewModel
