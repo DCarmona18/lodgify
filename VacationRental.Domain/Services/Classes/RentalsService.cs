@@ -43,7 +43,7 @@ namespace VacationRental.Domain.Services.Classes
         public async Task<ResourceIdViewModel> CreateAsync(IRentalBinding model)
         {
             var rentalsEntity = _mapper.Map<RentalsEntity>(model);
-            var data = _mapper.Map<RentalViewModel>(await _rentalsRepository.CreateUpdate(rentalsEntity))
+            var data = await _rentalsRepository.CreateUpdate(rentalsEntity)
                                  ?? throw new ApplicationException("Error creating Rental");
             
             return new ResourceIdViewModel { Id = data.Id };
