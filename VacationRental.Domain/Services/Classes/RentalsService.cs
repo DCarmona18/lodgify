@@ -42,6 +42,9 @@ namespace VacationRental.Domain.Services.Classes
         ///<inheritdoc/>
         public async Task<ResourceIdViewModel> CreateAsync(RentalBindingModel model)
         {
+            if (model.PreparationTimeInDays < 0)
+                throw new ApplicationException("Preparation Time must be greater or equal to zero.");
+
             var rentalsEntity = _mapper.Map<RentalsEntity>(model);
             var data = await _rentalsRepository.CreateUpdate(rentalsEntity)
                                  ?? throw new ApplicationException("Error creating Rental");

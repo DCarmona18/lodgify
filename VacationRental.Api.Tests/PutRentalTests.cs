@@ -29,7 +29,7 @@ namespace VacationRental.Api.Tests
             };
 
             ResourceIdViewModel postResult;
-            using (var postResponse = await _client.PostAsJsonAsync($"/api/v1/vacationrental/rentals", request))
+            using (var postResponse = await _client.PostAsJsonAsync($"/api/v1/rentals", request))
             {
                 Assert.True(postResponse.IsSuccessStatusCode);
                 postResult = await postResponse.Content.ReadAsAsync<ResourceIdViewModel>();
@@ -41,7 +41,7 @@ namespace VacationRental.Api.Tests
                 PreparationTimeInDays = 3
             };
 
-            using (var putResponse = await _client.PutAsJsonAsync($"/api/v1/vacationrental/rentals/{postResult.Id}", request2))
+            using (var putResponse = await _client.PutAsJsonAsync($"/api/v1/rentals/{postResult.Id}", request2))
             {
                 Assert.True(putResponse.IsSuccessStatusCode);
             }
@@ -66,7 +66,7 @@ namespace VacationRental.Api.Tests
             };
 
             ResourceIdViewModel postResult;
-            using (var postResponse = await _client.PostAsJsonAsync($"/api/v1/vacationrental/rentals", request))
+            using (var postResponse = await _client.PostAsJsonAsync($"/api/v1/rentals", request))
             {
                 Assert.True(postResponse.IsSuccessStatusCode);
                 postResult = await postResponse.Content.ReadAsAsync<ResourceIdViewModel>();
@@ -104,7 +104,7 @@ namespace VacationRental.Api.Tests
                 PreparationTimeInDays = 3
             };
 
-            using (var putResponse = await _client.PutAsJsonAsync($"/api/v1/vacationrental/rentals/{postResult.Id}", request2))
+            using (var putResponse = await _client.PutAsJsonAsync($"/api/v1/rentals/{postResult.Id}", request2))
             {
                 Assert.True(putResponse.IsSuccessStatusCode);
             }
@@ -129,7 +129,7 @@ namespace VacationRental.Api.Tests
             };
 
             ResourceIdViewModel postResult;
-            using (var postResponse = await _client.PostAsJsonAsync($"/api/v1/vacationrental/rentals", request))
+            using (var postResponse = await _client.PostAsJsonAsync($"/api/v1/rentals", request))
             {
                 Assert.True(postResponse.IsSuccessStatusCode);
                 postResult = await postResponse.Content.ReadAsAsync<ResourceIdViewModel>();
@@ -168,7 +168,7 @@ namespace VacationRental.Api.Tests
 
             await Assert.ThrowsAsync<ApplicationException>(async () =>
             {
-                using (var putResponse = await _client.PutAsJsonAsync($"/api/v1/vacationrental/rentals/{postResult.Id}", request2))
+                using (var putResponse = await _client.PutAsJsonAsync($"/api/v1/rentals/{postResult.Id}", request2))
                 {
                 }
             });

@@ -44,7 +44,7 @@ namespace VacationRental.Api
             services.AddTransient<IRentalsService, RentalsService>();
 
             //services.AddTransient<IVacationsRentalService, VacationsRentalService>();
-            services.AddTransient<IVacationsRentalCalendarService, VacationsRentalCalendarService>();
+            //services.AddTransient<IVacationsRentalCalendarService, VacationsRentalCalendarService>();
 
             services.AddTransient<IRentalsRepository, RentalsRepository>();
             services.AddTransient<IBookingRepository, BookingRepository>();

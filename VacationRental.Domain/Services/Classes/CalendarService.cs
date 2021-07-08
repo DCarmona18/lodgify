@@ -41,7 +41,7 @@ namespace VacationRental.Domain.Services.Classes
             var rentals = _mapper.Map<IDictionary<int, RentalViewModel>>(await _rentalsRepository.GetById(rentalId));
             if (rentals.Count == 0)
                 throw new ApplicationException("Rental not found");
-            
+
             var result = new CalendarViewModel
             {
                 RentalId = rentals.First().Value.Id,
@@ -49,22 +49,29 @@ namespace VacationRental.Domain.Services.Classes
             };
 
             var bookings = await _bookingsRepository.GetAll();
+            int preparationDays = rentals.First().Value.PreparationTimeInDays;
             for (var i = 0; i < nights; i++)
             {
                 var date = new CalendarDateViewModel
                 {
                     Date = start.Date.AddDays(i),
-                    Bookings = new List<CalendarBookingViewModel>()
+                    Bookings = new List<CalendarBookingViewModel>(),
+                    PreparationTimes = new List<PreparationTimesViewModel>()
                 };
 
                 var results = bookings.Values
-                                .Where(booking => booking.RentalId == rentalId && 
+                                .Where(booking => booking.RentalId == rentalId &&
                                 booking.Start <= date.Date &&
-                                booking.Start.AddDays(booking.Nights) > date.Date).ToList();
+                                booking.Start.AddDays(booking.Nights + preparationDays) > date.Date).ToList();
 
-                results.ForEach(booking => 
+                int unitNumber = 1;
+                results.ForEach(booking =>
                 {
-                    date.Bookings.Add(new CalendarBookingViewModel { Id = booking.Id });
+                    if (start.Date.AddDays(i) >= booking.Start.AddDays(booking.Nights)
+                        && start.Date.AddDays(i) <= booking.Start.AddDays(booking.Nights + preparationDays))
+                        date.PreparationTimes.Add(new PreparationTimesViewModel { Unit = unitNumber++ });
+                    else
+                        date.Bookings.Add(new CalendarBookingViewModel { Id = booking.Id, Unit = unitNumber++ });
                 });
 
                 result.Dates.Add(date);
