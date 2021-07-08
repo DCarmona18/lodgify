@@ -49,7 +49,7 @@ namespace VacationRental.Domain.Services.Classes
             };
 
             var bookings = await _bookingsRepository.GetAll();
-
+            //int preparationDays = rentals.First().Value.PreparationTimeInDays;
             for (var i = 0; i < nights; i++)
             {
                 var date = new CalendarDateViewModel
@@ -59,7 +59,8 @@ namespace VacationRental.Domain.Services.Classes
                 };
 
                 var results = bookings.Values
-                                .Where(booking => booking.RentalId == rentalId && booking.Start <= date.Date &&
+                                .Where(booking => booking.RentalId == rentalId && 
+                                booking.Start <= date.Date &&
                                 booking.Start.AddDays(booking.Nights) > date.Date).ToList();
 
                 results.ForEach(booking => 

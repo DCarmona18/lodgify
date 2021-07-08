@@ -52,27 +52,21 @@ namespace VacationRental.Domain.Services.Classes
             if (rentalEntity.Count == 0)
                 throw new ApplicationException("Rental not found");
 
-            //rentalEntity.First().Value.PreparationTimeInDays
+            int preparationDays = rentalEntity.First().Value.PreparationTimeInDays;
             var bookings = _mapper.Map<IDictionary<int, BookingViewModel>>(await _bookingsRepository.GetAll());
             
-            for (var i = 0; i < model.Nights; i++)
+            var count = 0;
+            foreach (var booking in bookings.Values)
             {
-                var count = 0;
-                
-                foreach (var booking in bookings.Values)
-                {
-                    if (booking.RentalId == model.RentalId
-                        && (booking.Start <= model.Start.Date && booking.Start.AddDays(booking.Nights) > model.Start.Date)
-                        || (booking.Start < model.Start.AddDays(model.Nights) && booking.Start.AddDays(booking.Nights) >= model.Start.AddDays(model.Nights))
-                        || (booking.Start > model.Start && booking.Start.AddDays(booking.Nights) < model.Start.AddDays(model.Nights)))
-                    {
-                        count++;
-                    }
-                }
+                var modelEndDate = model.Start.AddDays(model.Nights + preparationDays);
+                var bookingEndDate = booking.Start.AddDays(booking.Nights + preparationDays);
 
-                if (count >= rentalEntity.First().Value.Units)
-                    throw new ApplicationException("Not available");
+                if (booking.RentalId == model.RentalId && TimeOverlaps(booking.Start, bookingEndDate, model.Start, modelEndDate))
+                    count++;
             }
+
+            if (count >= rentalEntity.First().Value.Units)
+                throw new ApplicationException("Not available");
 
             var bookingEntity = new BookingEntity
             {
@@ -87,7 +81,20 @@ namespace VacationRental.Domain.Services.Classes
         #endregion
 
         #region Private Methods
-
+        /// <summary>
+        /// Validates if 2 Dates overlap each other
+        /// </summary>
+        /// <param name="startX">Date 1: Start Date</param>
+        /// <param name="endX">Date 1: End Date</param>
+        /// <param name="startY">Date 2: Start Date</param>
+        /// <param name="endY">Date 2: End Date</param>
+        /// <returns></returns>
+        private bool TimeOverlaps(DateTime startX, DateTime endX, DateTime startY, DateTime endY) 
+        {
+            return ((startX <= startY.Date && endX > startY.Date)
+                    || (startX < endY && endX >= endY)
+                    || (startX > startY && endX < endY));
+        }
         #endregion
     }
 }
